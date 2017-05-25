@@ -1,5 +1,5 @@
 const defaultState = {
-    channels: ['#strippin'],
+    channels: [],
     messages: [],
     connected: false,
     error: false

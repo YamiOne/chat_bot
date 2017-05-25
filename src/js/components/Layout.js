@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import tmi from 'tmi.js';
 
+import HeaderComponent from './HeaderComponent';
 import ChatContainer from './ChatContainer';
 import * as chatActions from '../actions/chatActions';
 import config from '../tmi.config';
@@ -36,6 +37,10 @@ class Layout extends Component {
         });
     }
 
+    onKeyDown(event) {
+        if (event.keyCode == 13) this.joinChannel();
+    }
+
     removeChannel(channelTitle){
         client.part(channelTitle)
             .then(data => this.props.dispatch(chatActions.removeChannel(channelTitle)));
@@ -59,10 +64,17 @@ class Layout extends Component {
             return <ChatContainer key = {index} title = {channel} messages = {channelMessages} removeChannel = {this.removeChannel.bind(this)}/>;
         });
 
-        return <div>
-            <input type = "text" value = {this.state.channelTitle} onChange = {this.channelTitleChanged.bind(this)} />
-            <button onClick = {this.joinChannel.bind(this)}>Join another channel</button>
-            {channelComps}
+        return <div className = "app-wrapper">
+            <HeaderComponent />
+            <div className = "join-channel">
+                <input type = "text" className = "custom-input" value = {this.state.channelTitle} 
+                    onChange = {this.channelTitleChanged.bind(this)} onKeyDown = {this.onKeyDown.bind(this)}
+                    placeholder = "Channel name..."/>
+                <button onClick = {this.joinChannel.bind(this)}>Add</button>
+            </div>
+            <div className = "chat-container-wrapper">
+                {channelComps}
+            </div>
         </div>;
     }
 }

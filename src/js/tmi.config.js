@@ -7,9 +7,9 @@ const config = {
     },
     identity: {
         username: 'emoteanalyzer',
-        password: '' // need auth token
+        password: 'oauth:5tbxakfv2p78r2pgl13w7tggfcdp1s' // need auth token
     },
-    channels : ["#strippin"]
+    channels : []
 };
 
-module.exports = config;
+export default config;
