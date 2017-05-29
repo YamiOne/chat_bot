@@ -9,6 +9,10 @@ import config from '../tmi.config';
 
 const client = new tmi.client(config);
 
+/**
+ * Maps out Store object to state properties.
+ * @param {Object} store - Store object.
+ */
 function mapStoreToProps(store){
     return {
         messages: store.chatReducer.messages,
@@ -37,15 +41,27 @@ class Layout extends Component {
         });
     }
 
+    /**
+     * Listening for 'Enter' keydown - just so user doesn't have to click 'Add' button
+     * @param {Object} event - JS event object
+     */
     onKeyDown(event) {
         if (event.keyCode == 13) this.joinChannel();
     }
 
+    /**
+     * Dettaches client from channel and dispatches removeChannel action.
+     * @param {String} channelTitle - title of a channel to remove
+     */
     removeChannel(channelTitle){
         client.part(channelTitle)
             .then(data => this.props.dispatch(chatActions.removeChannel(channelTitle)));
     }
 
+    /**
+     * Attaches client to a channel and dispatches addChannel action.
+     * @param {Object} event - JS event object
+     */
     joinChannel(event){
         client.join(this.state.channelTitle)
             .then(data => {
@@ -54,6 +70,10 @@ class Layout extends Component {
             });
     }
 
+    /**
+     * Triggered on channel name input change. Updates the state with the value.
+     * @param {Object} event - JS event object
+     */
     channelTitleChanged(event){
         this.setState({channelTitle: event.target.value});
     }
