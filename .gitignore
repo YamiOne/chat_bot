@@ -1,7 +1,3 @@
 node_modules
 material
-# dist
-
-src
-webpack.config.js
-package.json
+dist
