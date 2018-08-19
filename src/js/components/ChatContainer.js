@@ -66,7 +66,6 @@ class ChatContainer extends Component {
 
   getMessages() {
     return this.props.messages.map((item, index) => {
-      // console.log(item);
       if (item.userInfo.username.toLowerCase().includes(this.state.searchText.toLowerCase()) || 
           item.message.toLowerCase().includes(this.state.searchText.toLowerCase())) 
       {
