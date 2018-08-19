@@ -1,34 +1,24 @@
-export function chatConnected(address, port){
-    return {
-        type: 'CHAT_CONNECTED',
-        payload: { address, port}
-    }
-}
+export const chatConnected = (address, port) => ({
+  type: 'CHAT_CONNECTED',
+  payload: { address, port }
+});
 
-export function chatDisconnected(reason){
-    return {
-        type: 'CHAT_DISCONNECTED',
-        payload: { reason }
-    }
-}
+export const chatDisconnected = (reason) => ({
+  type: 'CHAT_DISCONNECTED',
+  payload: { reason }
+});
 
-export function handleMessage(channel, message, userInfo){
-    return {
-        type: 'MESSAGE_RECEIVED',
-        payload: { channel, message, userInfo }
-    }
-}
+export const handleMessage = (channel, message, userInfo) => ({
+  type: 'MESSAGE_RECEIVED',
+  payload: { channel, message, userInfo }
+});
 
-export function addChannel(channel){
-    return {
-        type: 'CHANNEL_ADD',
-        payload: channel
-    }
-}
+export const addChannel = (channel) => ({
+  type: 'CHANNEL_ADD',
+  payload: channel
+});
 
-export function removeChannel(title){
-    return {
-        type: 'CHANNEL_REMOVE',
-        payload: title
-    }
-}
+export const removeChannel = (title) => ({
+  type: 'CHANNEL_REMOVE',
+  payload: title
+});
