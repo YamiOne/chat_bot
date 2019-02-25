@@ -1,3 +1,2 @@
-node_modules
-material
-dist
+/node_modules
+/dist
