@@ -36,7 +36,7 @@
     "sass-loader": "^6.0.5",
     "style-loader": "^0.17.0",
     "webpack": "^2.5.1",
-    "webpack-dev-server": "^2.4.5"
+    "webpack-dev-server": "^3.2.1"
   },
   "dependencies": {
     "tmi.js": "^1.2.1"

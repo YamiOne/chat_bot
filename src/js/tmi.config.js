@@ -7,7 +7,7 @@ const config = {
   },
   identity: {
     username: 'emoteanalyzer',
-    password: 'oauth:5tbxakfv2p78r2pgl13w7tggfcdp1s' // need auth token
+    password: '' // need auth token
   },
   channels : []
 };
