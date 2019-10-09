@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 
-import ListitemComponent from './ListitemComponent';
+import Listitem from './ListItem';
 
 class ChatContainer extends Component {
+
   constructor(props) {
     super(props);
 
     this.state = {
       searchText: '',
-      list: null,
       messagesSize: 100,
       shouldAutoScroll: true
     };
@@ -17,13 +17,6 @@ class ChatContainer extends Component {
     this.getMessages = this.getMessages.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
     this.scrollTriggered = this.scrollTriggered.bind(this);
-  }
-
-  /**
-   * Get UL DOM element after the component mounts
-   */
-  componentDidMount() {
-    this.setState({ list: document.getElementById(this.props.title + '_list') });
   }
 
   /**
@@ -44,7 +37,11 @@ class ChatContainer extends Component {
    */
   componentDidUpdate() {
     if (this.state.shouldAutoScroll) {
-      this.state.list.scrollTop = this.state.list.scrollHeight;
+      const list = document.getElementById(this.props.title + '_list');
+
+      if (list) {
+        list.scrollTop = list.scrollHeight;
+      }
     }
   }
 
@@ -70,7 +67,7 @@ class ChatContainer extends Component {
           item.message.toLowerCase().includes(this.state.searchText.toLowerCase())) 
       {
           let thisStyle = { color: item.userInfo.color };
-          return <ListitemComponent key={`${index}-${item.channel}`} uid={`${index}-${item.channel}`} username={item.userInfo['display-name']}  style={thisStyle} message={item.message} />    
+          return <Listitem key={`${index}-${item.channel}`} uid={`${index}-${item.channel}`} username={item.userInfo['display-name']}  style={thisStyle} message={item.message} />    
       }
     });
   }

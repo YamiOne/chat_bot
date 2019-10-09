@@ -1,48 +1,41 @@
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
 import tmi from 'tmi.js';
 
-import HeaderComponent from './HeaderComponent';
-import ChatContainer from './ChatContainer';
-import * as chatActions from '../actions/chatActions';
-import config from '../tmi.config';
+import config from './tmi.config';
+import Header from './components/Header';
+import ChatContainer from './components/ChatContainer';
+
+import './App.scss';
 
 const client = new tmi.client(config);
 
-/**
- * Maps out Store object to state properties.
- * @param {Object} store - Store object.
- */
-function mapStoreToProps(store) {
-  return {
-    messages: store.chatReducer.messages,
-    channels: store.chatReducer.channels,
-    chatConnected: store.chatReducer.connected,
-    error: store.chatReducer.error
-  };
-}
+class App extends Component {
 
-class Layout extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      channelTitle: '',
+      channels: [],
+      messages: [],
+      connected: false,
+      error: false
+    };
+  }
     
   componentWillMount() {
-    const { dispatch } = this.props;
-    
-    this.state = {
-      channelTitle: ''
-    };
-
     client.connect();
     
-    client.on('connected', (address, port) => {
-        dispatch(chatActions.chatConnected(address, port));
+    client.on('connected', () => {
+      this.setState({ connected: true });
     });
     
     client.on("disconnected", reason => {
-      dispatch(chatActions.chatDisconnected(reason));
+      this.setState({ connected: false });
     });
     
     client.on('message', (channel, userstate, message, self) => {
-      dispatch(chatActions.handleMessage(channel, message, userstate));
+      this.setState({ messages: [...this.state.messages, { channel, message, userInfo: userstate }] });
     });
   }
 
@@ -51,7 +44,7 @@ class Layout extends Component {
    * @param {Object} event - JS event object
    */
   onKeyDown(event) {
-    if (event.keyCode == 13) this.joinChannel();
+    if (event.keyCode === 13) this.joinChannel();
   }
 
   /**
@@ -60,7 +53,12 @@ class Layout extends Component {
    */
   removeChannel(channelTitle) {
     client.part(channelTitle)
-        .then(data => this.props.dispatch(chatActions.removeChannel(channelTitle)));
+      .then(data => {
+        this.setState({
+          channels: this.state.channels.filter(channel => channel !== channelTitle),
+          messages: this.state.messages.filter(item => item.channel !== channelTitle),
+        })
+      });
   }
 
   /**
@@ -70,8 +68,10 @@ class Layout extends Component {
   joinChannel(event) {
     client.join(this.state.channelTitle)
       .then(data => {
-        this.props.dispatch(chatActions.addChannel(data[0]));
-        this.setState({ channelTitle: '' });
+        this.setState({
+          channels: [...this.state.channels, data[0]],
+          channelTitle: ''
+        });
       });
   }
 
@@ -84,13 +84,13 @@ class Layout extends Component {
   }
 
   render() {
-    const channelComps = this.props.channels.map((channel, index) =>  {
-      let channelMessages = this.props.messages.filter(item => item.channel === channel);
+    const channelComps = this.state.channels.map((channel, index) =>  {
+      const channelMessages = this.state.messages.filter(item => item.channel === channel);
       return <ChatContainer key={index} title={channel} messages={channelMessages} removeChannel={this.removeChannel.bind(this)}/>;
     });
 
     return <div className = "app-wrapper">
-      <HeaderComponent />
+      <Header />
       <div className="join-channel">
           <input type="text" className="custom-input" value={this.state.channelTitle} 
               onChange={this.channelTitleChanged.bind(this)} onKeyDown={this.onKeyDown.bind(this)}
@@ -104,4 +104,4 @@ class Layout extends Component {
   }
 }
 
-export default connect(mapStoreToProps)(Layout);
+export default App;
